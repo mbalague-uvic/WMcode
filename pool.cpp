@@ -20,7 +20,7 @@ void pool::setExternal(double nu)
 void pool::initPool(int number, poolinfo pi)
 {
 
-   int     sd = 1001; // ETR
+   int     sd = 1001;
 
    nr = number;
    neurons = int (brain::C * brain::poolf[nr] + 0.5);
@@ -51,7 +51,7 @@ void pool::initPool(int number, poolinfo pi)
    //precalculations
    bin[0][0] = bin[1][0] = bin[1][1] = 1.0;
    fak2[0] = fak2[1] = 1.0;
-   alphatauNMDArisen[0] = 1.0;  
+   alphatauNMDArisen[0] = 1.0;
    alphatauNMDArisen[1] = -1.0 * calpha * tauNMDArise;
 
    for (int n = 2; n <= NMAX; n++)
@@ -85,12 +85,11 @@ void pool::initPool(int number, poolinfo pi)
    generateintegraldata();
 
    //Spiking
-   // get a random seed from the time of day, ETR
    time_t t1 = time(NULL);
    sd = t1 % 32000; // take the modulus
    if (nr == 0) // show the seed just for pool 0: it remains the same for each pool
-   {   
-      cout << "seed " << sd << endl; // ETR
+   {
+      cout << "seed " << sd << endl;
    }
    srand(sd);
 
@@ -171,7 +170,7 @@ void pool::calcSynapses()
               (sNMDAeuler / tauNMDAdecay) + calpha * xNMDA[i] * (1 -
                       sNMDAeuler));
 
-      brain::sumAMPArec[nr] += sAMPArec[i] * u[i] * x[i];
+      brain::sumAMPArec[nr] += sAMPArec[i] * u[i] * x[i]; // x[i] = 1; no synaptic depression
       brain::sumNMDA[nr] += sNMDA[i] * u[i] * x[i];
       brain::sumGABA[nr] += sGABA[i];
    }
@@ -207,7 +206,7 @@ void pool::calcPotentials(double zeit, ostream * spout, int flprint)
                                  cgamma * exp(-cbeta * Veuler)) +
                          gGABA * (Veuler - VI) * inputGABA +
                          AHP_Ca * gAHP * Ca[i] * (Veuler - VK)) / Cm);
-         
+
          dV[i] = -(gm / Cm) * (V[i] - VL)
                  - (gAMPAext * (V[i] - VE) * sAMPAext[i]
                  + gAMPArec * (V[i] - VE) * inputAMPArec
@@ -245,7 +244,7 @@ void pool::calcPotentials(double zeit, ostream * spout, int flprint)
 void pool::initVar()
 {
 
-   
+
    vnx = nx();
    vNx = Nx();
    vnix = nix();
@@ -258,7 +257,7 @@ void pool::initVar()
 double pool::Euler(double eulerdelta)
 {
 
-   
+
    initVar();
 
    return (brain::poolnu[nr] + eulerdelta * (-1 * brain::poolnu[nr] + Phi2())
@@ -268,7 +267,7 @@ double pool::Euler(double eulerdelta)
 double pool::Flow()
 {
 
-   
+
    initVar();
 
    return (Phi2());
@@ -277,9 +276,9 @@ double pool::Flow()
 double pool::Phi2()
 {
 
-   double b = fbeta();          
+   double b = fbeta();
 
-   double a = falpha();         
+   double a = falpha();
 
    if ((b < -20) || (a > 10))
    {
@@ -287,13 +286,13 @@ double pool::Phi2()
       exit(1);
    }
 
-   int xi = (int) ((b + 20) / 0.002);  
+   int xi = (int) ((b + 20) / 0.002);
 
-   int yi = (int) ((a + 20) / 0.002);  
+   int yi = (int) ((a + 20) / 0.002);
 
-   double xf = ((b + 20) - (xi * 0.002)) / 0.002;       
+   double xf = ((b + 20) - (xi * 0.002)) / 0.002;
 
-   double yf = ((a + 20) - (yi * 0.002)) / 0.002;       
+   double yf = ((a + 20) - (yi * 0.002)) / 0.002;
 
    double sum = 0;
 
@@ -321,7 +320,7 @@ double pool::Phi2()
       end = yi - 1;
    }
 
-   
+
    int inter1 = start + (50 - (start % 50));
 
    int inter2 = end - (end % 50);
@@ -387,7 +386,7 @@ double pool::tauE()
    return Cm / (gm * vSx);
 }
 
-double pool::nerf(double z)     
+double pool::nerf(double z)
 {
    double t, ef, at;
 
@@ -420,7 +419,7 @@ double pool::muE()
 
 double pool::sigmaE()
 {
-   
+
    return sqrt(pow(avrV - VE, 2) * vtauE * csigmaE * nuext);
 }
 
@@ -434,19 +433,19 @@ double pool::Sx()
 
 double pool::rho1()
 {
-   
+
    return crho1 / J();
 }
 
 double pool::rho2()
 {
-   
+
    return crho2 * (avrV - VE) * (J() - 1) / pow(J(), 2);
 }
 
 void pool::newavrV()
 {
-   
+
    avrV = vmuE - (Vthr - Vreset) * brain::poolnu[nr] * vtauE;
 
 }
@@ -480,7 +479,7 @@ double pool::nix()
 
    for (int i = 0; i < brain::PoolCount; i++)
    {
-      if (w[i].gaba != 0)       
+      if (w[i].gaba != 0)
          res += brain::poolf[i] * w[i].gaba * brain::poolnu[i];
 
    }

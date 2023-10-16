@@ -2,9 +2,9 @@ CC      = g++
 CFLAGS  = -O -ffast-math -W -Wall -pedantic -ansi -Winline
 LFLAGS =
 
-mf: brain.o pool.o mfgus10Sb.o; $(CC) $(LFLAGS) brain.o pool.o mfgus10Sb.o -o mf
+mf: brain.o pool.o mfmain.o; $(CC) $(LFLAGS) brain.o pool.o mfmain.o -o mf
 
-mfgus10Sb.o: brain.h pool.h mfgus10Sb.cpp; $(CC) $(CFLAGS) -c mfgus10Sb.cpp
+mfmain.o: brain.h pool.h mfmain.cpp; $(CC) $(CFLAGS) -c mfmain.cpp
 
 brain.o: brain.h brain.cpp pool.h; $(CC) $(CFLAGS) -c brain.cpp 
 

@@ -10,7 +10,7 @@
 #define taoCa		50.   // (ms) decay Ca2+ 600
 #define AHP_Ca    0   // flag
 
-#define taoF      750 // ETR. originally 2000
+#define taoF      750 
 #define taoD       50
 #define U	  0.15
 
